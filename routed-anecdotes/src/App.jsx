@@ -3,10 +3,12 @@ import { useState } from 'react'
 import {
   Routes,
   Route,
+  useMatch,
 } from 'react-router-dom'
 
 import About from './components/About'
 import AnecdoteList from './components/AnecdoteList'
+import AnecdoteDetail from './components/AnecdoteDetail'
 import Footer from './components/Footer'
 import CreateAnecdote from './components/CreateAnecdote'
 import Menu from './components/Menu'
@@ -51,12 +53,18 @@ const App = () => {
   //   setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   // }
 
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match
+    ? anecdotes.find(a => Number(a.id) === Number(match.params.id))
+    : null
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
       <Routes>
-        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/anecdotes/:id" element={<AnecdoteDetail anecdote={anecdote} />} />
         <Route path="/create" element={<CreateAnecdote addNew={addNew} />} />
         <Route path="/about" element={<About />} />
       </Routes>
