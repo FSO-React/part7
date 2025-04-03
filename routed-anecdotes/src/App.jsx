@@ -32,7 +32,7 @@ const App = () => {
     }
   ])
 
-  // const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
@@ -62,10 +62,12 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      {notification && <div>{notification}</div>}
+      <br />
       <Routes>
         <Route path="/anecdotes" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path="/anecdotes/:id" element={<AnecdoteDetail anecdote={anecdote} />} />
-        <Route path="/create" element={<CreateAnecdote addNew={addNew} />} />
+        <Route path="/create" element={<CreateAnecdote addNew={addNew} setNotification={setNotification} />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />

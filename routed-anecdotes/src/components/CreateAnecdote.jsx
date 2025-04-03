@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -15,6 +16,14 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/anecdotes')
+    setContent('')
+    setAuthor('')
+    setInfo('')
+    props.setNotification(`a new anecdote ${content} created!`)
+    setTimeout(() => {
+      props.setNotification('')
+    }, 10000)
   }
 
   return (
@@ -40,7 +49,8 @@ const CreateNew = (props) => {
 
 }
 CreateNew.propTypes = {
-  addNew: PropTypes.func.isRequired
+  addNew: PropTypes.func.isRequired,
+  setNotification: PropTypes.func.isRequired
 }
 
 export default CreateNew
