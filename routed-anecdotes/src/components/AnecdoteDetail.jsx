@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 
 const AnecdoteDetail = ({ anecdote }) => {
+  console.log("anecdote prop:", anecdote); // Add this line
   return (
     <div>
       <h2>{anecdote.content}</h2>
