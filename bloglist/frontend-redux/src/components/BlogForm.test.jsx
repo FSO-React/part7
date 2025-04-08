@@ -6,7 +6,7 @@ import { expect, vi } from 'vitest'
 test('renders content', async () => {
   const createBlog = vi.fn()
   const user = userEvent.setup()
-  
+
   const blogExampleData = {
     title: 'Component testing is done with react-testing-library',
     author: 'Adrian Diaz',
@@ -14,7 +14,7 @@ test('renders content', async () => {
   }
 
   const { container } = render(<BlogForm createBlog={createBlog} />)
-  
+
   const input_title = container.querySelector('#title-input')
   const input_author = container.querySelector('#author-input')
   const input_url = container.querySelector('#url-input')

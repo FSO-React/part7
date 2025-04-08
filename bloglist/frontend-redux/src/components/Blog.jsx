@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { deleteBlog, likeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog }) => {
+  const dispatch = useDispatch()
+
   const blogStyle = {
     padding: 8,
     border: 'solid',
@@ -25,19 +29,19 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     setShowDetails(!showDetails)
   }
 
-  const likeBlog = (event) => {
+  const handleLikeBlog = (event) => {
     event.preventDefault()
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1
     }
-    updateBlog(updatedBlog)
+    dispatch(likeBlog(updatedBlog))
   }
 
-  const deleteBlog = (event) => {
+  const handleRemoveBlog = (event) => {
     event.preventDefault()
     if (window.confirm(`Remove blog "${blog.title}" (by ${blog.author})?`)) {
-      removeBlog(blog)
+      dispatch(deleteBlog(blog))
     }
   }
 
@@ -53,12 +57,12 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
             </div>
             <div>
               <strong>likes:</strong> {blog.likes}
-              <button onClick={likeBlog} style={buttonStyle} id='like_blog'> like </button>
+              <button onClick={handleLikeBlog} style={buttonStyle} id='like_blog'> like </button>
             </div>
             <div>
               <strong>author:</strong> {blog.author}
             </div>
-            <button onClick={deleteBlog} style={deleteButtonStyle}> remove </button>
+            <button onClick={handleRemoveBlog} style={deleteButtonStyle}> remove </button>
           </div>
         }
       </div>
@@ -68,8 +72,6 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog
