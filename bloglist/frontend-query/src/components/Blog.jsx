@@ -1,7 +1,13 @@
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { useNotificationDispatch } from '../contexts/NotificationContext'
+import { update, remove } from '../services/blogs'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+const Blog = ({ blog }) => {
+  const queryClient = useQueryClient()
+  const notificationDispatch = useNotificationDispatch()
+
   const blogStyle = {
     padding: 8,
     border: 'solid',
@@ -25,19 +31,44 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     setShowDetails(!showDetails)
   }
 
+  const updateBlogMutation = useMutation({
+    mutationFn: update,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      notificationDispatch({ type: 'SET', payload: { message: 'blog updated successfully!', status: 'success' } })
+    },
+    onError: () => {
+      notificationDispatch({ type: 'SET', payload: { message: 'blog failed to be updated', status: 'error' } })
+    }
+  })
+
+  const removeBlogMutation = useMutation({
+    mutationFn: remove,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+      notificationDispatch({ type: 'SET', payload: { message: 'blog removed successfully!', status: 'success' } })
+    },
+    onError: () => {
+      notificationDispatch({ type: 'SET', payload: { message: 'blog failed to be removed', status: 'error' } })
+    }
+  })
+
   const likeBlog = (event) => {
     event.preventDefault()
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1
     }
-    updateBlog(updatedBlog)
+    updateBlogMutation.mutate(updatedBlog)
   }
 
   const deleteBlog = (event) => {
     event.preventDefault()
     if (window.confirm(`Remove blog "${blog.title}" (by ${blog.author})?`)) {
-      removeBlog(blog)
+      const removeBlog = {
+        ...blog,
+      }
+      removeBlogMutation.mutate(removeBlog)
     }
   }
 
@@ -68,8 +99,6 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired
 }
 
 export default Blog

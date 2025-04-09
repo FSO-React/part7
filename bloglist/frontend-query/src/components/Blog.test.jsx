@@ -17,9 +17,9 @@ test('renders content', () => {
   const { container } = render(<Blog blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />)
   const div = container.querySelector('.blog')
 
-  expect(div).toHaveTextContent(`Component testing is done with react-testing-library - Adrian Diaz`)
-  expect(div).not.toHaveTextContent(`url: https://example.com`)
-  expect(div).not.toHaveTextContent(`likes: 10`)
+  expect(div).toHaveTextContent('Component testing is done with react-testing-library - Adrian Diaz')
+  expect(div).not.toHaveTextContent('url: https://example.com')
+  expect(div).not.toHaveTextContent('likes: 10')
 })
 
 test('shows url and likes when click the button', async () => {
@@ -40,10 +40,10 @@ test('shows url and likes when click the button', async () => {
 
   await user.click(button)
 
-  expect(div).toHaveTextContent(`Component testing is done with react-testing-library - Adrian Diaz`)
-  expect(div).toHaveTextContent(`author: Adrian Diaz`)
-  expect(div).toHaveTextContent(`url: https://example.com`)
-  expect(div).toHaveTextContent(`likes: 10`)
+  expect(div).toHaveTextContent('Component testing is done with react-testing-library - Adrian Diaz')
+  expect(div).toHaveTextContent('author: Adrian Diaz')
+  expect(div).toHaveTextContent('url: https://example.com')
+  expect(div).toHaveTextContent('likes: 10')
 })
 
 test('registers the 2 clicks on the like button', async () => {
@@ -60,7 +60,7 @@ test('registers the 2 clicks on the like button', async () => {
 
   const { container } = render(<Blog blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />)
   const div = container.querySelector('.blog')
-  
+
   const view_button = container.querySelector('#toggle-details')
   await user.click(view_button)
 
@@ -68,7 +68,7 @@ test('registers the 2 clicks on the like button', async () => {
   await user.click(like_button)
   await user.click(like_button)
 
-  expect(div).toHaveTextContent(`Component testing is done with react-testing-library - Adrian Diaz`)
+  expect(div).toHaveTextContent('Component testing is done with react-testing-library - Adrian Diaz')
   expect(updateBlog.mock.calls).toHaveLength(2)
   expect(removeBlog.mock.calls).toHaveLength(0)
   expect(updateBlog).toHaveBeenCalledTimes(2)

@@ -3,37 +3,37 @@ const baseUrl = '/api/blogs'
 
 let token = null
 
-const setToken = newToken => {
+export const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+export const getAllBlogs = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
 }
 
-const create = async newObject => {
+export const create = async newObject => {
   const config = {
     headers: { Authorization: token },
   }
   const response = await axios.post(baseUrl, newObject, config)
-  return response
+  return response.data
 }
 
-const update = async (id, newObject) => {
+export const update = async (updateObject) => {
   const config = {
     headers: { Authorization: token },
   }
-  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
-  return response
+  const response = await axios.put(`${baseUrl}/${updateObject.id}`, updateObject, config)
+  return response.data
 }
 
-const remove = async (id) => {
+export const remove = async (removeObject) => {
   const config = {
     headers: { Authorization: token },
   }
-  const response = await axios.delete(`${baseUrl}/${id}`, config)
-  return response
+  console.log(removeObject)
+  const response = await axios.delete(`${baseUrl}/${removeObject.id}`, config)
+  console.log(response)
+  return response.data
 }
-
-export default { getAll, create, update, remove, setToken }

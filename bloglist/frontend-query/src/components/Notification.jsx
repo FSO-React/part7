@@ -1,20 +1,18 @@
-import PropTypes from 'prop-types'
+import { NotificationContextProvider, useNotificationValue } from '../contexts/NotificationContext'
+import { useUserValue } from '../contexts/UserContext'
 
-const Notification = ({ status, message }) => {
-  if (message === null) {
-    return null
-  }
+const Notification = () => {
+  const notification = useNotificationValue()
 
   return (
-    <div className={`${status} notification`}>
-      {message}
+    <div>
+      {notification &&
+        <div className={`${notification.status} notification`}>
+          {notification.message}
+        </div>
+      }
     </div>
   )
-}
-
-Notification.propTypes = {
-  status: PropTypes.string,
-  message: PropTypes.string
 }
 
 export default Notification
