@@ -1,46 +1,49 @@
-import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import User from './pages/User'
+import Blog from './pages/Blog'
+import UserList from './pages/UserList'
+import BlogList from './pages/BlogList'
+
+import Menu from './components/Menu'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import LoginForm from './components/LoginForm'
 
-import { useState, useEffect } from 'react'
+import blogService from './services/blogs'
+import storageService from './services/storage'
+
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
+import { initializeUsers } from './reducers/usersReducer'
+import { logIn } from './reducers/loginReducer'
+import {
+  Routes,
+  Route,
+  useMatch,
+} from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
-  const blogs = useSelector(state => [...state.blogs].sort((a, b) => b.likes - a.likes))
-  const [user, setUser] = useState(null)
+  const loggedUser = useSelector(state => state.login)
 
   useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
+    if (loggedUser) {
+      dispatch(initializeBlogs())
+      dispatch(initializeUsers())
+    }
+  }, [loggedUser, dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+    const user = storageService.getUser()
+    if (user) {
       blogService.setToken(user.token)
+      dispatch(logIn(user))
     }
   }, [])
 
-  const handleLogout = (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
-  }
 
-  const loginForm = () => {
-    return (
-      <Togglable buttonLabel='login'>
-        <LoginForm />
-      </Togglable>
-    )
-  }
+  const user = useSelector(state => state.user)
+  const blogs = useSelector(state => state.blogs)
 
   const blogForm = () => {
     return (
@@ -50,26 +53,34 @@ const App = () => {
     )
   }
 
+  const matchBlogs = useMatch('/blogs/:id')
+  const blog = matchBlogs
+    ? blogs.find(blog => blog.id === matchBlogs.params.id)
+    : null
+
+
   return (
     <div>
+      <Menu />
+      <br />
       <h1>blogs</h1>
       <Notification />
 
-      {!user && loginForm()}
       {user &&
         <div>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
           {blogForm()}
         </div>
       }
 
       <br />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      <Routes>
+        <Route path="/" element={<BlogList />} />
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blogs/:id" element={<Blog blog={blog} />} />
+        <Route path="/users" element={<UserList />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route path="/*" element={<h1> 404 Page Not Found</h1>} />
+      </Routes>
     </div>
   )
 }

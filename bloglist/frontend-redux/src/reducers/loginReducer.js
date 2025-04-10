@@ -1,45 +1,48 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import storageService from '../services/storage'
 import { setNotification } from './notificationReducer'
-import { setUser } from './userReducer'
 
 const loginSlice = createSlice({
   name: 'login',
   initialState: null,
   reducers: {
-    setToken(state, action) {
+    logIn(state, action) {
       return action.payload
+    },
+    logOut(state, action) {
+      return null
     }
   }
 })
 
-export const { setToken } = loginSlice.actions
+export const { logIn, logOut } = loginSlice.actions
 
 export const loginUser = (loginObject) => {
   return async dispatch => {
     try {
       const user = await loginService.login(loginObject)
       if (user) {
-        window.localStorage.setItem(
-          'loggedBlogappUser', JSON.stringify(user)
-        )
+        storageService.saveUser(user)
         blogService.setToken(user.token)
-        dispatch(setUser(user))
-        dispatch(setNotification('login successful!', 10))
+        dispatch(logIn(user))
+        dispatch(setNotification('login successful!', 10, 'success'))
       }
     } catch (exception) {
-      dispatch(setNotification('wrong username or password', 5))
+      dispatch(setNotification('wrong username or password', 5, 'error'))
     }
   }
 }
 export const logoutUser = () => {
   return async dispatch => {
     try {
-      dispatch(setUser(null))
-      dispatch(setNotification('logout successful!', 10))
+      storageService.removeUser()
+      blogService.setToken(null)
+      dispatch(logOut())
+      dispatch(setNotification('logout successful!', 10, 'success'))
     } catch (exception) {
-      dispatch(setNotification('error logging out', 5))
+      dispatch(setNotification('error logging out', 5, 'error'))
     }
   }
 }
