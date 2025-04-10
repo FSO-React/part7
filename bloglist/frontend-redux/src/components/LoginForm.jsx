@@ -1,7 +1,5 @@
-import { useState  } from 'react'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../reducers/loginReducer'
-import PropTypes from 'prop-types'
 
 const LoginForm = () => {
   const dispatch = useDispatch()

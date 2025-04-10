@@ -36,7 +36,7 @@ export const createBlog = (blogObject) => {
   return async dispatch => {
     const newBlog = await blogService.create(blogObject)
     dispatch(appendBlog(newBlog))
-    dispatch(setNotification(`blog "${newBlog.title}" (by ${newBlog.author}) created successfully!`, 5))
+    dispatch(setNotification(`blog "${newBlog.title}" (by ${newBlog.author}) created successfully!`, 5, 'success'))
   }
 }
 
@@ -44,7 +44,7 @@ export const likeBlog = (blogObject) => {
   return async dispatch => {
     const updatedBlog = await blogService.update(blogObject.id, blogObject)
     dispatch(updateBlog(updatedBlog))
-    dispatch(setNotification(`blog "${updatedBlog.title}" (by ${updatedBlog.author}) liked successfully!`, 5))
+    dispatch(setNotification(`blog "${updatedBlog.title}" (by ${updatedBlog.author}) liked successfully!`, 5, 'success'))
   }
 }
 
@@ -52,7 +52,7 @@ export const deleteBlog = (blogObject) => {
   return async dispatch => {
     await blogService.remove(blogObject.id)
     dispatch(removeBlog(blogObject.id))
-    dispatch(setNotification(`blog "${blogObject.title}" (by ${blogObject.author}) removed successfully!`, 5))
+    dispatch(setNotification(`blog "${blogObject.title}" (by ${blogObject.author}) removed successfully!`, 5, 'success'))
   }
 }
 
