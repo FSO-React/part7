@@ -18,6 +18,10 @@ const blogSchema = new mongoose.Schema({
     default: 0,
     set: v => v === null ? 0 : v
   },
+  comments: {
+    type: Array,
+    default: []
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
