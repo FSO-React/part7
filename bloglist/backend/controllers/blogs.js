@@ -66,4 +66,19 @@ blogsRouter.put('/:id', async (request, response, next) => {
   response.status(200).json(updatedBlog)
 })
 
+// comments
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const { comment } = request.body
+  if (!comment || comment === '' || comment.trim().length === 0) {
+    return response.status(400).json({ error: 'comment is missing' })
+  }
+
+  const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1, id: 1 })
+  blog.comments = blog.comments.concat(comment)
+
+  const commentedBlog = await blog.save()
+  commentedBlog ? response.status(200).json(commentedBlog) : response.status(404).end()
+})
+
 module.exports = blogsRouter

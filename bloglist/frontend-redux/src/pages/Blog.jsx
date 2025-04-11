@@ -1,5 +1,3 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteBlog, likeBlog } from '../reducers/blogsReducer'
@@ -20,7 +18,7 @@ const Blog = () => {
   }
 
   const deleteButtonStyle = {
-    margin: 4,
+    margin: 25,
     backgroundColor: 'red',
     color: 'white'
   }
@@ -51,7 +49,10 @@ const Blog = () => {
 
   return (
     <div className='blog'>
-      <h1>{blog.title}</h1>
+      <div style={{ display: 'flex' }}>
+        <h1>{blog.title}</h1>
+        <button onClick={handleRemoveBlog} style={deleteButtonStyle}> remove </button>
+      </div>
       <div>
         <a href={blog.url}> {blog.url} </a>
       </div>
@@ -60,9 +61,18 @@ const Blog = () => {
         <button onClick={handleLikeBlog} style={buttonStyle} id='like_blog'> like </button>
       </div>
       <div>
-        <strong>author:</strong> {blog.author}
+        {blog.author}
       </div>
-      <button onClick={handleRemoveBlog} style={deleteButtonStyle}> remove </button>
+      <div>
+        <h2>comments</h2>
+        <ul>
+          {blog.comments.map(comment =>
+            <li key={comment.id}>
+              {comment}
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
   )
 }
