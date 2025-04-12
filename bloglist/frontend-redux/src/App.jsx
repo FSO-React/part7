@@ -1,12 +1,6 @@
-import User from './pages/User'
-import Blog from './pages/Blog'
-import UserList from './pages/UserList'
-import BlogList from './pages/BlogList'
-
+import PrivateRoutes from './components/PrivateRoutes'
+import Login from './pages/Login'
 import Menu from './components/Menu'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
 
 import blogService from './services/blogs'
 import storageService from './services/storage'
@@ -19,8 +13,11 @@ import { logIn } from './reducers/loginReducer'
 import {
   Routes,
   Route,
-  useMatch,
+  Navigate,
 } from 'react-router-dom'
+import {
+  Container,
+} from 'react-bootstrap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -39,48 +36,24 @@ const App = () => {
       blogService.setToken(user.token)
       dispatch(logIn(user))
     }
-  }, [])
+  }, [dispatch])
 
-
-  const user = useSelector(state => state.user)
-  const blogs = useSelector(state => state.blogs)
-
-  const blogForm = () => {
+  if (!loggedUser) {
     return (
-      <Togglable buttonLabel='create new blog'>
-        <BlogForm />
-      </Togglable>
+      <Container className='m-auto'>
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Container>
     )
   }
-
-  const matchBlogs = useMatch('/blogs/:id')
-  const blog = matchBlogs
-    ? blogs.find(blog => blog.id === matchBlogs.params.id)
-    : null
-
 
   return (
     <div>
       <Menu />
-      <br />
-      <h1>blogs</h1>
-      <Notification />
-
-      {user &&
-        <div>
-          {blogForm()}
-        </div>
-      }
-
-      <br />
-      <Routes>
-        <Route path="/" element={<BlogList />} />
-        <Route path="/blogs" element={<BlogList />} />
-        <Route path="/blogs/:id" element={<Blog blog={blog} />} />
-        <Route path="/users" element={<UserList />} />
-        <Route path="/users/:id" element={<User />} />
-        <Route path="/*" element={<h1> 404 Page Not Found</h1>} />
-      </Routes>
+      <Container className='m-auto'>
+        <PrivateRoutes />
+      </Container>
     </div>
   )
 }

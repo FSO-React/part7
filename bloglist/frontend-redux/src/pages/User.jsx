@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { Card } from 'react-bootstrap'
 
 const User = () => {
   const { id } = useParams()
@@ -17,17 +19,34 @@ const User = () => {
   }
 
   return (
-    <div>
-      <h1>{user.name}</h1>
-      <h2>added blogs</h2>
-      <ul>
-        {user.blogs.map(blog =>
-          <li key={blog.id}>
-            {blog.title}
-          </li>
-        )}
-      </ul>
-    </div>
+    <Card>
+      <Card.Body>
+        <Card.Title style={{ textAlign: 'center', fontSize: '50px', marginBottom: '30px', fontStyle: 'italic' }}>{user.name}</Card.Title>
+        <Card>
+          <Card.Body>
+            <Card.Title style={{ textAlign: 'center', fontSize: '30px', marginBottom: '30px', fontStyle: 'italic' }}>Added blogs</Card.Title>
+            <ul>
+              {user.blogs.map(blog =>
+                <li key={blog.id}>
+                  <Link to={`/blogs/${blog.id}`} >{blog.title}</Link>
+                </li>
+              )}
+            </ul>
+          </Card.Body>
+        </Card>
+      </Card.Body>
+    </Card>
+    // <div>
+    //   <h1>{user.name}</h1>
+    //   <h2>added blogs</h2>
+    //   <ul>
+    //     {user.blogs.map(blog =>
+    //       <li key={blog.id}>
+    //         <Link to={`/blogs/${blog.id}`} >{blog.title}</Link>
+    //       </li>
+    //     )}
+    //   </ul>
+    // </div>
   )
 }
 

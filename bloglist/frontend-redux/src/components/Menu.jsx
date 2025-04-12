@@ -1,45 +1,57 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logOut } from '../reducers/loginReducer'
 import storageService from '../services/storage'
 
-import Togglable from './Togglable'
-import LoginForm from './LoginForm'
+import {
+  Button,
+  Container,
+  Navbar,
+  Nav
+} from 'react-bootstrap'
 
 const Menu = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const loggedUser = useSelector(state => state.login)
 
-  const padding = {
-    paddingRight: 5
+  const mp = {
+    margin: 4,
+    padding: 4,
   }
 
   const handleLogout = (event) => {
     event.preventDefault()
     storageService.removeUser()
     dispatch(logOut())
-  }
-
-  const loginForm = () => {
-    return (
-      <Togglable buttonLabel='login'>
-        <LoginForm />
-      </Togglable>
-    )
+    navigate('/')
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <Link style={padding} to="/blogs">blogs</Link>
-      <Link style={padding} to="/users">users</Link>
-      {!loggedUser && loginForm()}
+    <>
       {loggedUser &&
-        <div>
-          {loggedUser.name} logged in
-          <button onClick={handleLogout}>logout</button>
-        </div>
+        <Navbar expand="lg" className="bg-body-tertiary">
+          <Container fluid>
+            <Navbar.Brand href="/" onClick={() => navigate('/')}>BlogApp</Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Collapse id="navbarScroll" className='justify-content-start'>
+              <Nav
+                className="me-auto my-2 my-lg-0"
+                style={{ maxHeight: '140px' }}
+                navbarScroll
+              >
+                <Nav.Link href="blogs" onClick={() => navigate('/blogs')}>Blogs</Nav.Link>
+                <Nav.Link href="users" onClick={() => navigate('/users')}>Users</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+            <Navbar.Collapse id="navbarScroll" className='justify-content-end'>
+              <Navbar.Text style={mp}>{loggedUser.name}</Navbar.Text>
+              <Button style={mp} onClick={handleLogout}>Logout</Button>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
       }
-    </div>
+    </>
   )
 }
 

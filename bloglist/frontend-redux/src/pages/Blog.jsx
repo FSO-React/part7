@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteBlog, likeBlog, commentBlog } from '../reducers/blogsReducer'
+import { Card, Table, Form, Button } from 'react-bootstrap'
 
 const Blog = () => {
   const { id } = useParams()
@@ -59,38 +60,46 @@ const Blog = () => {
   }
 
   return (
-    <div className='blog'>
-      <div style={{ display: 'flex' }}>
-        <h1>{blog.title}</h1>
-        <button onClick={handleRemoveBlog} style={deleteButtonStyle}> remove </button>
-      </div>
-      <div>
-        <a href={blog.url}> {blog.url} </a>
-      </div>
-      <div>
-        {blog.likes} likes
-        <button onClick={handleLikeBlog} style={buttonStyle} id='like_blog'> like </button>
-      </div>
-      <div>
-        {blog.author}
-      </div>
-      <div>
-        <h2>comments</h2>
-        <form onSubmit={handleAddComment}>
-          <div>
-            <input type="text" name="comment" id="comment" />
-            <button type="submit">add comment</button>
-          </div>
-        </form>
-        <ul>
-          {blog.comments.map(comment =>
-            <li key={comment.id}>
-              {comment}
-            </li>
-          )}
-        </ul>
-      </div>
-    </div>
+    <Card>
+      <Card.Body>
+        <Card.Title style={{ textAlign: 'center', fontSize: '50px', marginBottom: '30px', fontStyle: 'italic' }}>&quot;{blog.title}&quot;</Card.Title>
+        <Card style={{ margin: '30px' }}>
+          <Card.Body>
+            <Card.Title style={{ textAlign: 'center', fontSize: '30px', marginBottom: '30px', fontStyle: 'italic' }}>About</Card.Title>
+            <Card.Text>
+              <strong>URL:</strong> <a href={blog.url}> {blog.url} </a>
+            </Card.Text>
+            <Card.Text>
+              <strong>Likes:</strong> {blog.likes} likes
+              <button onClick={handleLikeBlog} style={buttonStyle} id='like_blog'> like </button>
+            </Card.Text>
+            <Card.Text>
+              <strong>Author:</strong> {blog.author}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+        <Card style={{ margin: '30px' }}>
+          <Card.Body>
+            <Card.Title style={{ textAlign: 'center', fontSize: '30px', marginBottom: '30px', fontStyle: 'italic' }}>Comments</Card.Title>
+            <Card.Text>
+              <Form onSubmit={handleAddComment}>
+                <Form.Control type="text" name="comment" id="comment" />
+                <div className='d-flex justify-content-end'>
+                  <Button type="submit">add comment</Button>
+                </div>
+              </Form>
+            </Card.Text>
+            <Card.Text>
+              <ul>
+                {blog.comments.map(comment =>
+                  <li key={comment}>{comment}</li>
+                )}
+              </ul>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Card.Body>
+    </Card>
   )
 }
 

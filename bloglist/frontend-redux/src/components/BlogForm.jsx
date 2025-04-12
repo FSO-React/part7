@@ -1,8 +1,15 @@
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogsReducer'
+import {
+  Button,
+  Form,
+  Card,
+} from 'react-bootstrap'
+import { useState } from 'react'
 
 const BlogForm = () => {
   const dispatch = useDispatch()
+  const [validated, setValidated] = useState(true)
 
   const addBlog = (event) => {
     event.preventDefault()
@@ -18,40 +25,34 @@ const BlogForm = () => {
   }
 
   return (
-    <div>
-      <h2>Create a new blog</h2>
-
-      <form onSubmit={addBlog}>
-        <div>
-        title:
-          <input
-            id='title-input'
-            data-testid='title-input'
-            type="text"
-            name="title"
-          />
-        </div>
-        <div>
-        author:
-          <input
-            id='author-input'
-            data-testid='author-input'
-            type="text"
-            name="author"
-          />
-        </div>
-        <div>
-        url:
-          <input
-            id='url-input'
-            data-testid='url-input'
-            type="text"
-            name="url"
-          />
-        </div>
-        <button type="submit" id='save-button' data-testid='save-button'>create</button>
-      </form>
-    </div>
+    <Form noValidate onSubmit={addBlog} validated={validated}>
+      <Form.Group className="mb-3" controlId="formTitle">
+        {/* <Form.Label>Title</Form.Label> */}
+        <Form.Control
+          required
+          type="text"
+          placeholder="Title" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formUrl">
+        {/* <Form.Label>Url</Form.Label> */}
+        <Form.Control
+          required
+          type="url"
+          placeholder="Url" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formAuthor">
+        {/* <Form.Label>Author</Form.Label> */}
+        <Form.Control
+          required
+          type="text"
+          placeholder="Author" />
+      </Form.Group>
+      <div className="d-flex justify-content-end">
+        <Button variant="primary" type="submit">
+          Add
+        </Button>
+      </div>
+    </Form>
   )
 }
 
